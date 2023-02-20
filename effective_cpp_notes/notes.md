@@ -112,3 +112,43 @@ class A {
 
 ## 20. 对于非内置类型，尽量使用const引用传递
 
+## 21. 函数返回对象时，轻易不能返回reference
+1. 绝对不要返回
+   - pointer或reference指向的local stack对象
+   - reference指向的heap-allocated对象
+   - pointer或reference指向的local static对象
+
+## 22. 将成员变量声明为private
+1. 将成员变量封装的原因：
+   - 语法一致性：public接口内的每个东西都是函数
+   - 读写权限控制
+   - 成员变量的封装性 与 它改变时造成的代码破坏量 成反比
+2. protected 不比 public更具封装性
+
+## 23. 以non-member、non-friend函数替换member函数
+1. 原因：non-member、non-friend函数的封装性比后者高（不能访问类内的private等）
+2. 强调是在member和non-member、non-friend之间抉择
+3. 可采用工具类的方式。而C++的常用做法是命名空间，将类和non-member、non-friend函数置于同一命名空间。（命名空间可以跨越多个源码文件而class不同）
+
+## 24. 若函数参数（包括this）可能需要类型转换，则需要采用non-member函数
+- 只适用与C++面向对象编程，不适用于泛型编程
+
+## 25. swap()函数
+1. swap函数有三类：①non-member ②member ③std::swap。其中STL容器的std::swap()特化版本就是通过调用其member swap()实现的。
+2. 如果需要改善默认swap()函数（意味着使用了pimpl(pointer to inplementation)手法）:
+   - 提供一个public member swap() 让它高效置换。且该函数不能抛出任何异常
+   - 在该class或template所在命名空间内提供一个non-member swap()，令它调用member swap()
+   - 若你正编写一个class而非class template，则可为该class特化std::swap()，并令它调用member swap()；若是class template，则没办法特化，而且没办法重载（因为STL不允许增加template）
+3. 当使用swap()函数时，先使用`using std::swap;`语句，再调用不加std的swap()函数
+   ```C++
+    template<typename T>
+    void doSomething(T& obj1, T& obj2) {
+        using std::swap;
+        swap(obj1, obj2);
+    }
+   ```
+   原因：通过using让std::swap()在定义域曝光，然后调用swap()时编译器为我们挑选最合适的函数。   
+   特化版std::swap() > non-member swap() > default std::swap()
+4. member swap()不应抛出任何异常。高效swap()往往是对内置类型的置换，这种置换不会抛出异常
+
+
