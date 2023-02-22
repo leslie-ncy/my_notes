@@ -181,3 +181,31 @@ class A {
 ## 31. 将文件间的编译依存关系最小化
 1. 编译依存性最小化的一般构想：相依于声明式，而非定义式；手段分别是Handle classes和Interface classes
 2. 程序库头文件应仅有声明式
+
+----------
+# 六、继承与面向对象设计
+## 32. public继承意味着is-a(是一个or一种)
+1. 适用于base classes的每件事也一定都适用于derived classes。
+2. 每个derived对象也都是一个base对象，反之不是。
+3. 正例：人和学生；鸟和企鹅，不考虑飞行；
+4. 反例：鸟和企鹅，飞行；矩形和正方形，增加面积
+
+## 33. 避免遮掩继承
+1. derived内与base内相同的名称（无论函数还是变量）都会遮掩class内的名称，不符合public “is-a”的设计原则
+2. 可用using声明 或是 转交函数
+
+## 34. 区分 接口继承 和 实现继承
+1. 成员函数可以分为三类：
+   - pure virtual 纯虚函数：接口继承，强制derived实现接口
+   - impure virtual （非纯）虚函数：接口继承和缺省实现继承
+   - non-virtural 非虚函数：接口继承和强制性的实现继承
+2. 通过在base class中定义pure virtual，既能强制dirived实现接口又能通过调用base的实现减少代码重复量
+
+## 35. 考虑virtual函数以外的其他选择
+1. 替代方案包括NVI（non-virtual interface）方法和Strategy设计模式的多种形式。NVI本身是一种特殊的Template Method设计模式
+2. Strategy设计模式：
+   - 通过将函数指针作为变量实现
+   - 通过tr1::function函数对象实现
+   - 古典strategy，将virtual函数替换为另一个继承体系的virtual函数
+
+## 36.
