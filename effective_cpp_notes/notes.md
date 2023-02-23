@@ -208,4 +208,30 @@ class A {
    - 通过tr1::function函数对象实现
    - 古典strategy，将virtual函数替换为另一个继承体系的virtual函数
 
-## 36.
+## 36. 禁止重新定义继承而来的non-virtual函数
+
+## 37. 禁止重新定义继承而来的缺省参数值（函数默认参数）
+1. 如果是virtual函数说明要动态绑定，而函数默认参数是静态绑定
+
+## 38. 通过复合（组合或聚合）构造“has-a”和“根据某物实现”的关系
+1. 复合（composition）与public继承的“is-a”完全不同
+2. 在应用领域，意味“has-a”;在实现方面，意味“is-implemented-in-terms-of”（根据某物实现）
+
+## 39. 慎用private继承
+1. private继承意味着“is-implemented-in-terms-of”，但通常不如复合合适
+2. 但当derived需要访问protected成员或重写virtual函数时，就需要private继承
+3. 若继承空类（无成员变量），private继承的好处是使该空类不占空间，复合由于将依赖的类作为成员变量，需要占1字节空间。
+
+## 40. 慎用多重继承
+1. 多重继承可能导致歧义性，比如两个父类拥有相同名称的函数。
+2. “钻石型多呈继承”：继承的不同base classes派生自相同的父类 或是 继承体系中某个base和某个derived之间有一条或以上的相同路线。这样会产生的问题是：若被多次继承的base中有个成员变量，则在derived中有多少这个成员变量？
+   - 缺省做法是复制，即两个都有
+   - 通过virtual继承可以实现derived对象中只有一个成员变量。
+3. virtual继承会增加编译和运行成本，但如果virtual base class不带任何数据，则将是最具实用价值的情况
+4. 多重继承的正当用途：比如，public继承某个Interface和private继承某个协助实现的class
+
+-----------
+# 七、模板与泛型编程
+
+--------------
+# 八、定制new和delete
